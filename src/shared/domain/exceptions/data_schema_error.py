@@ -1,0 +1,2 @@
+class DataSchemaError(Exception):
+    pass

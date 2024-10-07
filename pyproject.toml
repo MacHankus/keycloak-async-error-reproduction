@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "File Browser"
+description = "Backend for amakids applications"
+version = "0.1.0"
+authors = []
+
+[tool.poetry.dependencies]
+python = "3.11.9"
+asyncpg = "0.28.0"
+sqlalchemy = {extras = ["asyncio"], version = "2.0.31"}
+dependency-injector = "4.41.0"
+pydantic = "2.7.4"
+pydantic-settings = "2.0.3" 
+fastapi = "0.115.0"
+uvicorn = "0.23.2"
+alembic = "1.13.1"
+httpx = "0.27.0"
+psycopg2 = "2.9.9"
+psycopg2-binary = [{platform = "darwin", version = "2.9.9" }]
+python-multipart = "0.0.9"
+python-magic = "0.4.27"
+loguru = "0.7.2"
+fpdf = "1.7.2"
+pyjwt = {extras = ["crypto"], version = "2.9.0"}
+python-magic-bin = [{platform = "win32", version = "0.4.14"}]
+python-keycloak = "4.3.0"
+anyio = "4.6.0"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "1.10.0"
+ruff = "0.0.287"
+isort = "5.13.2"
+black = "23.12.1"
+pytest = "7.4.4"
+
+[tool.ruff]
+line-length = 120
+
+[tool.mypy]
+ignore_missing_imports = true
