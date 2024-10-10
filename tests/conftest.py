@@ -22,7 +22,7 @@ def anyio_backend():
 
 @pytest.fixture(scope="session")
 async def keycloak_admin(request) -> Generator[KeycloakAdmin, None, None]:
-    async with create_keycload_admin() as admin:
+    async with create_keycloak_admin() as admin:
         yield admin
 
 
@@ -38,8 +38,8 @@ async def create_keycloak_user(
         new_keycloak_user = await create_keycloak_user_helper(
             keycloak_admin=keycloak_admin, user_data=user_data
         )
-        stack.push_async_callback(keycload_admin.a_delete_user, new_keycloak_user.get("id"))
+        stack.push_async_callback(keycloak_admin.a_delete_user, new_keycloak_user.get("id"))
         return new_keycloak_user
 
-    async with contextlib.AsyncContextManager() as stack:
+    async with contextlib.AsyncExitStack() as stack:
         yield wrapper
