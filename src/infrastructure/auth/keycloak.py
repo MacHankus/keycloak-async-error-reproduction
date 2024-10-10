@@ -7,9 +7,6 @@ import httpx
 
 @contextlib.asynccontextmanager
 async def create_keycloak_admin():
-    async with httpx.AsyncClient() as client:
-        await client.get("http://auth:8080/auth", timeout=1)
-        print(client.data)
     v = KeycloakAdmin(server_url=settings.KEYCLOAK_ADMIN_URL,
                         username=settings.KEYCLOAK_ADMIN_USERNAME,
                         password=settings.KEYCLOAK_ADMIN_PASSWORD,

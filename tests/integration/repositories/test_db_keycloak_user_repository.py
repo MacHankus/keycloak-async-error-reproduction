@@ -27,7 +27,7 @@ async def test_repository_should_get_user_by_id_with_proper_values(create_keyclo
     assert user.id is not None
 
 @pytest.mark.anyio
-async def test_repository_should_get_user_by_id_with_proper_values2(create_keycloak_user: Callable):
+async def test_repository_should_get_user_by_id_with_proper_values2(create_keycloak_user: Callable, keycloak_admin: KeycloakAdmin) -> None:
     # Arrange
     fake_new_user = create_fake_keycloak_new_user()
     created_user = await create_keycloak_user(user_data=fake_new_user)
