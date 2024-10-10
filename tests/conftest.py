@@ -12,6 +12,8 @@ from infrastructure.auth.keycloak import (
 )
 from tests.helpers.keycloak.user import create_keycloak_user_helper
 
+import contextlib
+
 
 @pytest.fixture(scope="session")
 def anyio_backend():
@@ -19,13 +21,13 @@ def anyio_backend():
 
 
 @pytest.fixture(scope="session")
-def keycloak_admin(request) -> Generator[KeycloakAdmin, None, None]:
-    yield create_keycloak_admin()
+async def keycloak_admin(request) -> Generator[KeycloakAdmin, None, None]:
+    async with create_keycload_admin() as admin:
+        yield admin
 
 
 @pytest.fixture
 async def create_keycloak_user(
-    request: pytest.FixtureRequest,
     keycloak_admin: KeycloakAdmin,
 ) -> AsyncGenerator[
     Callable[[Dict[str, str | bool] | None], Awaitable[Dict[str, str | bool]]], None
@@ -36,18 +38,8 @@ async def create_keycloak_user(
         new_keycloak_user = await create_keycloak_user_helper(
             keycloak_admin=keycloak_admin, user_data=user_data
         )
-
-        def finalizer():
-            async def afinalizer():
-                try:
-                    await keycloak_admin.a_delete_user(new_keycloak_user.get("id"))
-                except Exception:
-                    pass
-
-            event_loop = asyncio.get_event_loop()
-            event_loop.run_until_complete(afinalizer())
-
-        request.addfinalizer(finalizer)
+        stack.push_async_callback(keycload_admin.a_delete_user, new_keycloak_user.get("id"))
         return new_keycloak_user
 
-    yield wrapper
+    async with contextlib.AsyncContextManager() as stack:
+        yield wrapper
