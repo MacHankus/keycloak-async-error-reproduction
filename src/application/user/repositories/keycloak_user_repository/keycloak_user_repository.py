@@ -6,11 +6,13 @@ from pydantic import ValidationError
 
 from domain.user.user import User
 from domain.user.user_repository_interface import UserRepositoryInterface
-from infrastructure.auth.keycloak import keycloak_admin
 from shared.domain.exceptions.data_schema_error import DataSchemaError
-
+import keycloak
 
 class KeycloakUserRepository(UserRepositoryInterface):
+
+    def __init__(self, keycloak_admin: keycloak.KeycloakAdmin):
+        self._keycloak_admin = keycloak_admin
 
     async def get_all(self) -> List[User]:
         users = await keycloak_admin.a_get_users(
@@ -39,7 +41,7 @@ class KeycloakUserRepository(UserRepositoryInterface):
 
 
     async def get_by_id(self, id: str) -> User | None:
-        user = await keycloak_admin.a_get_user(id)
+        user = await self._keycloak_admin.a_get_user(id)
         if isinstance(user, dict):
             try:
                 return User(
